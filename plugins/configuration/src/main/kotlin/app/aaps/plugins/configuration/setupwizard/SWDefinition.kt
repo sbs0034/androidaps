@@ -9,10 +9,8 @@ import androidx.core.net.toUri
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.Medtrum
 import app.aaps.core.interfaces.pump.OmnipodDash
@@ -410,15 +408,6 @@ class SWDefinition @Inject constructor(
             .add(swBreakProvider.get())
             .add(swPluginProvider.get().option(PluginType.SENSITIVITY, R.string.configbuilder_sensitivity_description))
 
-    private val getScreenObjectives
-        get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.objectives)
-            .skippable(false)
-            .add(swInfoTextProvider.get().label(R.string.startobjective))
-            .add(swBreakProvider.get())
-            .add(swFragmentProvider.get().with((activePlugin.activeObjectives as PluginBase).pluginDescription.fragmentClass!!))
-            .validator { activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) == true }
-            .visibility { config.APS && activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) == false }
-
     private fun swDefinitionFull() = // List all the screens here
         add(screenSetupWizard)
             //.add(screenLanguage)
@@ -439,7 +428,6 @@ class SWDefinition @Inject constructor(
             .add(screenPump)
             .add(screenAps)
             .add(screenSensitivity)
-            .add(getScreenObjectives)
 
     private fun swDefinitionPumpControl() = // List all the screens here
         add(screenSetupWizard)
